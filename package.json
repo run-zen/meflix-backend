@@ -1,0 +1,31 @@
+{
+    "name": "meflix-backend",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "nodemon index.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/run-zen/meflix-backend.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/run-zen/meflix-backend/issues"
+    },
+    "homepage": "https://github.com/run-zen/meflix-backend#readme",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "dotenv": "^9.0.2",
+        "express": "^4.17.1",
+        "mongodb": "^3.6.6",
+        "mongoose": "^5.12.9"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.7"
+    }
+}
