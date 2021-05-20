@@ -45,7 +45,7 @@ export default class MoviesController {
             if (req.query.genre) {
                 filters.genre = req.query.genre;
             }
-            if(req.query.sortby) {
+            if (req.query.sortby) {
                 filters.sortby = req.query.sortby;
             }
             console.log(`filters : ${filters}`);
@@ -66,13 +66,13 @@ export default class MoviesController {
             res.status(404).json({ success: false });
         }
     }
-    static async apiQuickSearch(req,res,next) {
+    static async apiQuickSearch(req, res, next) {
         try {
-            let page = 1
-            let name = req.params.name
+            let page = req.query.page ? req.query.page : 1;
+            let name = req.params.name;
             let filters = {
-                name : name
-            }
+                name: name,
+            };
 
             const { moviesList, totalMovies } = await MoviesDAO.quickSearch({
                 page,
@@ -86,8 +86,7 @@ export default class MoviesController {
             };
 
             res.status(200).json(response);
-
-        } catch(e) {
+        } catch (e) {
             console.error(`Unable to get movies due to : ${e}`);
             res.status(404).json({ success: false });
         }
