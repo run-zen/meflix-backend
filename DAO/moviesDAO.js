@@ -99,37 +99,44 @@ export default class MoviesDAO {
 
     static async getMovies({ page = 1, filters }) {
         let query;
-        let project = {title:1,genres:1,"imdb.rating":1,released:1}
+        let project = { title: 1, genres: 1, "imdb.rating": 1, released: 1 };
         let sort = {};
         if (!filters) {
             query = {};
         } else {
             query = { $and: [] };
             if ("name" in filters) {
-                query["$and"].push({ title:{$regex: new RegExp('^'+filters.name,'i')} });
+                query["$and"].push({
+                    title: { $regex: new RegExp("^" + filters.name, "i") },
+                });
             }
             if ("genre" in filters) {
                 query["$and"].push({ genres: { $in: [filters.genre] } });
             }
             if ("rating" in filters) {
-                query["$and"].push({ "imdb.rating": { $gte: parseInt(filters.rating,10) } });
+                query["$and"].push({
+                    "imdb.rating": { $gte: parseFloat(filters.rating) },
+                });
             }
-            if("sortby" in filters) {
-                sort[filters.sortby] = -1
+            if ("sortby" in filters) {
+                sort[filters.sortby] = -1;
             } else {
-                sort["imdb.rating"] = -1
+                sort["imdb.rating"] = -1;
             }
         }
         //console.log(`search query : ${filters.sortby}`);
         let cursor;
         try {
-            cursor = await movies.find(query)
+            cursor = await movies.find(query);
         } catch (e) {
             console.error(`Unable to issue find command, ${e}`);
             return;
         }
 
-        const displayCursor = cursor.sort(sort).skip((page - 1) * 20).limit(20);
+        const displayCursor = cursor
+            .sort(sort)
+            .skip((page - 1) * 20)
+            .limit(20);
 
         try {
             const moviesList = await displayCursor.toArray();
@@ -145,39 +152,41 @@ export default class MoviesDAO {
         // {$and:[{$text:{$search:filters.name}},{genres:{$in:filters.genre}},{"imdb.rating":{$gte: filters.rating}}]}
     }
 
-    static async quickSearch({page =1,filters}) {
-        let query
-        let searchname
-        let project = {title:1,genres:1,"imdb.rating":1,released:1}
-        if("name" in filters) {
-            searchname = "^"+ filters.name
-        }
-        else {
+    static async quickSearch({ page = 1, filters }) {
+        let query;
+        let searchname;
+        let project = { title: 1, genres: 1, "imdb.rating": 1, released: 1 };
+        if ("name" in filters) {
+            searchname = "^" + filters.name;
+        } else {
             searchname = "^";
         }
-        query = {title:{$regex: new RegExp(searchname,'i')}}
+        query = { title: { $regex: new RegExp(searchname, "i") } };
 
-        let cursor
+        let cursor;
 
         try {
-            cursor = await movies.find(query)
+            cursor = await movies.find(query);
         } catch (e) {
             console.error(`Unable to issue find command, ${e}`);
             return;
         }
 
-        let displayCursor = cursor.sort({"imdb.rating":-1}).skip((page-1)*20).limit(20)
+        let displayCursor = cursor
+            .sort({ "imdb.rating": -1 })
+            .skip((page - 1) * 20)
+            .limit(20);
 
         try {
-            const moviesList = await displayCursor.toArray()
-            const totalMovies = await movies.countDocuments(query)
+            const moviesList = await displayCursor.toArray();
+            const totalMovies = await movies.countDocuments(query);
 
-            return {moviesList,totalMovies}
+            return { moviesList, totalMovies };
         } catch (e) {
             console.error(
                 `Unable to convert cursor to array or problem counting documents, ${e}`
             );
-            return {status: "error"};
+            return { status: "error" };
         }
     }
 }
