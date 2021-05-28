@@ -119,7 +119,11 @@ export default class MoviesDAO {
                 });
             }
             if ("sortby" in filters) {
-                sort[filters.sortby] = -1;
+                if (filters.sortby === "title") {
+                    sort[filters.sortby] = 1;
+                } else {
+                    sort[filters.sortby] = -1;
+                }
             } else {
                 sort["imdb.rating"] = -1;
             }
