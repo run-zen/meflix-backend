@@ -119,13 +119,18 @@ export default class MoviesDAO {
                 });
             }
             if ("sortby" in filters) {
-                if (filters.sortby === "title") {
-                    sort[filters.sortby] = 1;
+                if (filters.sortby === "oldreleased") {
+                    sort["released"] = 1;
+                } else if (filters.sortby === "newreleased") {
+                    sort["released"] = -1;
                 } else {
                     sort[filters.sortby] = -1;
                 }
             } else {
                 sort["imdb.rating"] = -1;
+            }
+            if ("language" in filters) {
+                query["$and"].push({ languages: { $in: [filters.language] } });
             }
         }
         //console.log(`search query : ${filters.sortby}`);

@@ -48,6 +48,9 @@ export default class MoviesController {
             if (req.query.sortby) {
                 filters.sortby = req.query.sortby;
             }
+            if (req.query.language) {
+                filters.language = req.query.language;
+            }
             console.log(`filters : ${filters}`);
             const { moviesList, totalMovies } = await MoviesDAO.getMovies({
                 page,
